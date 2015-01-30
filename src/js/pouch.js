@@ -24,8 +24,7 @@ pouch.addRoutesPrivate = function(that) {
             var dbConfig = that.model.databases[key];
             var db = new MemPouchDB(key);
             if (dbConfig.data) {
-                var dataPath = path.resolve(__dirname, dbConfig.data);
-                var data     = require(dataPath);
+                var data = require(dbConfig.data);
                 db.bulkDocs(data);
             }
         });

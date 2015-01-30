@@ -3,6 +3,7 @@
 var namespace  = "gpii.pouch.tests";
 var fluid      = fluid || require('infusion');
 var gpii       = fluid.registerNamespace("gpii");
+var path       = require("path");
 
 require("../../node_modules/gpii-express/src/js/express");
 require("../../node_modules/gpii-express/src/js/router");
@@ -22,6 +23,7 @@ function isSaneResponse(jqUnit, error, response, body) {
     jqUnit.assertNotNull("There should be a body.", body);
 };
 
+var dataDir = path.resolve(__dirname, "./data/data.json");
 var pouch = gpii.express({
     "config": {
         "express": {
@@ -38,7 +40,7 @@ var pouch = gpii.express({
             options: {
                 model: {
                     "databases": {
-                        "data":   { "data": "../tests/data/data.json" },
+                        "data":   { "data": dataDir },
                         "nodata": {}
                     }
                 }
