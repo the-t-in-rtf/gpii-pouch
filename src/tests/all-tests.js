@@ -7,6 +7,7 @@ var gpii       = fluid.registerNamespace("gpii");
 require("../../node_modules/gpii-express/src/js/express");
 require("../../node_modules/gpii-express/src/js/router");
 require("../../node_modules/gpii-express/src/js/middleware");
+require("../../node_modules/gpii-express/src/js/bodyparser");
 require("../js/session-mock.js");
 require("../js/pouch.js");
 
@@ -21,17 +22,27 @@ function isSaneResponse(jqUnit, error, response, body) {
     jqUnit.assertNotNull("There should be a body.", body);
 };
 
-var pouch = gpii.pouch({
-    model: {
-        "config": {
-            "express": {
-                "port" :   7532,
-                "baseUrl": "http://localhost:7532/"
-            }
+var pouch = gpii.express({
+    "config": {
+        "express": {
+            "port" :   7532,
+            "baseUrl": "http://localhost:7532/"
+        }
+    },
+    components: {
+        "session": {
+            type: "gpii.pouch.tests.session"
         },
-        "databases": {
-            "data":   { "data": "../tests/data/data.json" },
-            "nodata": {}
+        "pouch": {
+            type: "gpii.pouch",
+            options: {
+                model: {
+                    "databases": {
+                        "data":   { "data": "../tests/data/data.json" },
+                        "nodata": {}
+                    }
+                }
+            }
         }
     }
 });
@@ -44,7 +55,7 @@ pouch.start(function() {
 
     jqUnit.asyncTest("Testing the root of the pouch instance...", function() {
         var options = {
-            url: pouch.model.config.express.baseUrl
+            url: pouch.options.config.express.baseUrl
         };
         request.get(options, function(error, response, body){
             jqUnit.start();
@@ -54,7 +65,7 @@ pouch.start(function() {
 
     jqUnit.asyncTest("Testing the 'data' database (should contain data)...", function() {
         var options = {
-            url: pouch.model.config.express.baseUrl + "data"
+            url: pouch.options.config.express.baseUrl + "data"
         };
         request.get(options, function(error, response, body){
             jqUnit.start();
@@ -67,7 +78,7 @@ pouch.start(function() {
 
     jqUnit.asyncTest("Testing the 'nodata' database (should contain data)...", function() {
         var options = {
-            url: pouch.model.config.express.baseUrl + "nodata"
+            url: pouch.options.config.express.baseUrl + "nodata"
         };
         request.get(options, function(error, response, body){
             jqUnit.start();

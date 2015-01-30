@@ -1,14 +1,13 @@
-// Utility functions to spin up pouch.
+// Utility functions to add pouch to an existing express instance
 "use strict";
 var fluid     = require('infusion');
 var namespace = "gpii.pouch";
 var pouch     = fluid.registerNamespace(namespace);
-var when      = require("when");
 var path      = require("path");
 
 pouch.addRoutesPrivate = function(that) {
-    if (!that.model.path) {
-        console.error("You must configure a model.path for a gpii.express.router grade...");
+    if (!that.options.path) {
+        console.error("You must configure a path for a gpii.express.router grade...");
         return null;
     }
 
@@ -32,8 +31,10 @@ pouch.addRoutesPrivate = function(that) {
         });
     }
 
-    that.model.router.use(that.model.path, require('express-pouchdb')(MemPouchDB));
+    that.model.router.use(that.options.path, require('express-pouchdb')(MemPouchDB));
 };
+
+// TODO:  Write a change listener to allow easy adding of new databases
 
 /*
     The 'databases' option is expected to be an array keyed by dbName, with options to control whether data is loaded or not, as in:
@@ -44,17 +45,12 @@ pouch.addRoutesPrivate = function(that) {
     }
  */
 fluid.defaults(namespace, {
-    gradeNames: ["fluid.standardRelayComponent", "gpii.express", "autoInit"],
+    gradeNames: ["fluid.standardRelayComponent", "gpii.express.router", "autoInit"],
+    config:     "{gpii.express}.options.config",
+    path:      "/",
     model: {
-        config:    null,
         router:    null,
-        path:      "/",
         databases: {}
-    },
-    components: {
-        "session": {
-            type: "gpii.pouch.tests.session"
-        }
     },
     listeners: {
         "addRoutes": {
