@@ -4,6 +4,8 @@ var namespace  = "gpii.pouch.tests";
 var fluid      = fluid || require('infusion');
 var gpii       = fluid.registerNamespace("gpii");
 var path       = require("path");
+var jqUnit     = fluid.require("jqUnit");
+var request    = require("request");
 
 require("../../node_modules/gpii-express/src/js/express");
 require("../../node_modules/gpii-express/src/js/router");
@@ -50,9 +52,6 @@ var pouch = gpii.express({
 });
 
 pouch.start(function() {
-    var jqUnit  = fluid.require("jqUnit");
-    var request = require("request");
-
     jqUnit.module("Testing pouch module stack...");
 
     jqUnit.asyncTest("Testing the root of the pouch instance...", function() {
