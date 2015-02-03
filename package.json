@@ -6,11 +6,12 @@
     "test": "node src/tests/all-tests.js"
   },
   "dependencies": {
+    "express":         "4.10.5",
+    "express-pouchdb": "0.14.0",
     "infusion":        "git://github.com/fluid-project/infusion.git#df5f8cfabf815a4086b778e73125c3c952dda4ec",
     "memdown":         "1.0.0",
-    "underscore-node": "0.1.2",
-    "express-pouchdb": "0.4.0",
-    "pouchdb":         "3.0.5"
+    "pouchdb":         "3.0.5",
+    "underscore-node": "0.1.2"
   },
   "devDependencies": {
     "gpii-express": "git://github.com/the-t-in-rtf/gpii-express",

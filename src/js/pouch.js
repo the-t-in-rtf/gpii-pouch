@@ -1,9 +1,11 @@
 // Utility functions to add pouch to an existing express instance
 "use strict";
-var fluid     = require('infusion');
-var namespace = "gpii.pouch";
-var pouch     = fluid.registerNamespace(namespace);
-var path      = require("path");
+var fluid          = require('infusion');
+var namespace      = "gpii.pouch";
+var pouch          = fluid.registerNamespace(namespace);
+var PouchDB        = require("pouchdb");
+var memdown        = require('memdown');
+var expressPouchdb = require('express-pouchdb');
 
 pouch.addRoutesPrivate = function(that) {
     if (!that.options.path) {
@@ -16,8 +18,7 @@ pouch.addRoutesPrivate = function(that) {
         return null;
     }
 
-    var PouchDB    = require('pouchdb');
-    var MemPouchDB = PouchDB.defaults({db: require('memdown')});
+    var MemPouchDB = PouchDB.defaults({db: memdown });
 
     if (that.model.databases && Object.keys(that.model.databases).length > 0) {
         Object.keys(that.model.databases).forEach(function(key){
@@ -30,7 +31,7 @@ pouch.addRoutesPrivate = function(that) {
         });
     }
 
-    that.model.router.use(that.options.path, require('express-pouchdb')(MemPouchDB));
+    that.model.router.use(that.options.path, expressPouchdb(MemPouchDB));
 };
 
 // TODO:  Write a change listener to allow easy adding of new databases
